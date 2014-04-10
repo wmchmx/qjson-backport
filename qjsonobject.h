@@ -42,7 +42,7 @@
 #ifndef QJSONOBJECT_H
 #define QJSONOBJECT_H
 
-#include <QtCore/qjsonvalue.h>
+#include "qjsonvalue.h"
 #include <QtCore/qiterator.h>
 
 QT_BEGIN_NAMESPACE
@@ -51,7 +51,7 @@ class QDebug;
 template <class Key, class T> class QMap;
 typedef QMap<QString, QVariant> QVariantMap;
 
-class Q_CORE_EXPORT QJsonObject
+class Q_JSONRPC_EXPORT QJsonObject
 {
 public:
     QJsonObject();
@@ -192,7 +192,7 @@ private:
     friend class QJsonDocument;
     friend class QJsonValueRef;
 
-    friend Q_CORE_EXPORT QDebug operator<<(QDebug, const QJsonObject &);
+    friend Q_JSONRPC_EXPORT QDebug operator<<(QDebug, const QJsonObject &);
 
     QJsonObject(QJsonPrivate::Data *data, QJsonPrivate::Object *object);
     void detach(uint reserve = 0);
@@ -207,7 +207,7 @@ private:
 };
 
 #if !defined(QT_NO_DEBUG_STREAM) && !defined(QT_JSON_READONLY)
-Q_CORE_EXPORT QDebug operator<<(QDebug, const QJsonObject &);
+Q_JSONRPC_EXPORT QDebug operator<<(QDebug, const QJsonObject &);
 #endif
 
 QT_END_NAMESPACE

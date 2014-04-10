@@ -39,9 +39,9 @@
 **
 ****************************************************************************/
 
-#include <qjsonobject.h>
-#include <qjsonvalue.h>
-#include <qjsonarray.h>
+#include "qjsonobject.h"
+#include "qjsonvalue.h"
+#include "qjsonarray.h"
 #include <qvariant.h>
 #include <qstringlist.h>
 #include <qdebug.h>
@@ -52,7 +52,6 @@ QT_BEGIN_NAMESPACE
 
 /*!
     \class QJsonValue
-    \inmodule QtCore
     \ingroup json
     \reentrant
     \since 5.0
@@ -81,8 +80,6 @@ QT_BEGIN_NAMESPACE
     Values are strictly typed internally and contrary to QVariant will not attempt to do any implicit type
     conversions. This implies that converting to a type that is not stored in the value will return a default
     constructed return value.
-
-    \sa {JSON Support in Qt}, {JSON Save Game Example}
 */
 
 /*!
@@ -114,9 +111,7 @@ QJsonValue::QJsonValue(QJsonPrivate::Data *data, QJsonPrivate::Base *base, const
         dbl = v.toDouble(base);
         break;
     case String: {
-        QString s = v.toString(base);
-        stringData = s.data_ptr();
-        stringData->ref.ref();
+        stringValue = v.toString(base);
         break;
     }
     case Array:
@@ -175,20 +170,16 @@ QJsonValue::QJsonValue(qint64 n)
 QJsonValue::QJsonValue(const QString &s)
     : d(0), t(String)
 {
-    stringData = *(QStringData **)(&s);
-    stringData->ref.ref();
+    stringValue = s;
 }
 
 /*!
     Creates a value of type String, with value \a s.
  */
-QJsonValue::QJsonValue(QLatin1String s)
+QJsonValue::QJsonValue(const QLatin1String &s)
     : d(0), t(String)
 {
-    // ### FIXME: Avoid creating the temp QString below
-    QString str(s);
-    stringData = *(QStringData **)(&str);
-    stringData->ref.ref();
+    stringValue = s;
 }
 
 /*!
@@ -219,9 +210,6 @@ QJsonValue::QJsonValue(const QJsonObject &o)
  */
 QJsonValue::~QJsonValue()
 {
-    if (t == String && stringData && !stringData->ref.deref())
-        free(stringData);
-
     if (d && !d->ref.deref())
         delete d;
 }
@@ -237,8 +225,7 @@ QJsonValue::QJsonValue(const QJsonValue &other)
     if (d)
         d->ref.ref();
 
-    if (t == String && stringData)
-        stringData->ref.ref();
+    stringValue = other.stringValue;
 }
 
 /*!
@@ -246,11 +233,9 @@ QJsonValue::QJsonValue(const QJsonValue &other)
  */
 QJsonValue &QJsonValue::operator =(const QJsonValue &other)
 {
-    if (t == String && stringData && !stringData->ref.deref())
-        free(stringData);
-
     t = other.t;
     dbl = other.dbl;
+    stringValue = other.stringValue;
 
     if (d != other.d) {
 
@@ -261,9 +246,6 @@ QJsonValue &QJsonValue::operator =(const QJsonValue &other)
             d->ref.ref();
 
     }
-
-    if (t == String && stringData)
-        stringData->ref.ref();
 
     return *this;
 }
@@ -484,9 +466,7 @@ QString QJsonValue::toString(const QString &defaultValue) const
 {
     if (t != String)
         return defaultValue;
-    stringData->ref.ref(); // the constructor below doesn't add a ref.
-    QStringDataPtr holder = { stringData };
-    return QString(holder);
+    return stringValue;
 }
 
 /*!
@@ -602,7 +582,6 @@ void QJsonValue::detach()
 
 /*!
     \class QJsonValueRef
-    \inmodule QtCore
     \reentrant
     \brief The QJsonValueRef class is a helper class for QJsonValue.
 

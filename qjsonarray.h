@@ -42,7 +42,7 @@
 #ifndef QJSONARRAY_H
 #define QJSONARRAY_H
 
-#include <QtCore/qjsonvalue.h>
+#include "qjsonvalue.h"
 #include <QtCore/qiterator.h>
 
 QT_BEGIN_NAMESPACE
@@ -52,7 +52,7 @@ class QStringList;
 template <typename T> class QList;
 typedef QList<QVariant> QVariantList;
 
-class Q_CORE_EXPORT QJsonArray
+class Q_JSONRPC_EXPORT QJsonArray
 {
 public:
     QJsonArray();
@@ -201,7 +201,7 @@ private:
     friend class QJsonPrivate::Data;
     friend class QJsonValue;
     friend class QJsonDocument;
-    friend Q_CORE_EXPORT QDebug operator<<(QDebug, const QJsonArray &);
+    friend Q_JSONRPC_EXPORT QDebug operator<<(QDebug, const QJsonArray &);
 
     QJsonArray(QJsonPrivate::Data *data, QJsonPrivate::Array *array);
     void compact();
@@ -212,7 +212,7 @@ private:
 };
 
 #if !defined(QT_NO_DEBUG_STREAM) && !defined(QT_JSON_READONLY)
-Q_CORE_EXPORT QDebug operator<<(QDebug, const QJsonArray &);
+Q_JSONRPC_EXPORT QDebug operator<<(QDebug, const QJsonArray &);
 #endif
 
 QT_END_NAMESPACE

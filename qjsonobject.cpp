@@ -52,7 +52,6 @@ QT_BEGIN_NAMESPACE
 
 /*!
     \class QJsonObject
-    \inmodule QtCore
     \ingroup json
     \reentrant
     \since 5.0
@@ -70,8 +69,6 @@ QT_BEGIN_NAMESPACE
     it has been created from as long as it is not being modified.
 
     You can convert the object to and from text based JSON through QJsonDocument.
-
-    \sa {JSON Support in Qt}, {JSON Save Game Example}
 */
 
 /*!
@@ -465,7 +462,7 @@ bool QJsonObject::operator!=(const QJsonObject &other) const
  */
 QJsonObject::iterator QJsonObject::erase(QJsonObject::iterator it)
 {
-    Q_ASSERT(d && d->ref.load() == 1);
+    Q_ASSERT(d && int(d->ref) == 1);
     if (it.o != this || it.i < 0 || it.i >= (int)o->length)
         return iterator(this, o->length);
 
@@ -980,7 +977,7 @@ void QJsonObject::detach(uint reserve)
         d->ref.ref();
         return;
     }
-    if (reserve == 0 && d->ref.load() == 1)
+    if (reserve == 0 && int(d->ref) == 1)
         return;
 
     QJsonPrivate::Data *x = d->clone(o, reserve);
