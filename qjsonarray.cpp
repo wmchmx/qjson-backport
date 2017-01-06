@@ -176,15 +176,16 @@ QJsonArray::QJsonArray(const QJsonArray &other)
  */
 QJsonArray &QJsonArray::operator =(const QJsonArray &other)
 {
-    if (d != other.d) {
-        if (d && !d->ref.deref())
-            delete d;
-        d = other.d;
-        if (d)
-            d->ref.ref();
+    if(this != &other){
+        if (d != other.d) {
+            if (d && !d->ref.deref())
+                delete d;
+            d = other.d;
+            if (d)
+                d->ref.ref();
+        }
+        a = other.a;
     }
-    a = other.a;
-
     return *this;
 }
 

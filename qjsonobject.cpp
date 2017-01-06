@@ -152,15 +152,16 @@ QJsonObject::QJsonObject(const QJsonObject &other)
  */
 QJsonObject &QJsonObject::operator =(const QJsonObject &other)
 {
-    if (d != other.d) {
-        if (d && !d->ref.deref())
-            delete d;
-        d = other.d;
-        if (d)
-            d->ref.ref();
-    }
-    o = other.o;
-
+    if(this != &other){
+        if (d != other.d) {
+            if (d && !d->ref.deref())
+                delete d;
+            d = other.d;
+            if (d)
+                d->ref.ref();
+        }
+        o = other.o;
+	}
     return *this;
 }
 

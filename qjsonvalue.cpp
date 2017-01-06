@@ -233,20 +233,21 @@ QJsonValue::QJsonValue(const QJsonValue &other)
  */
 QJsonValue &QJsonValue::operator =(const QJsonValue &other)
 {
-    t = other.t;
-    dbl = other.dbl;
-    stringValue = other.stringValue;
+    if(this != & other) {
+        t = other.t;
+        dbl = other.dbl;
+        stringValue = other.stringValue;
 
-    if (d != other.d) {
+        if (d != other.d) {
 
-        if (d && !d->ref.deref())
-            delete d;
-        d = other.d;
-        if (d)
-            d->ref.ref();
+            if (d && !d->ref.deref())
+                delete d;
+            d = other.d;
+            if (d)
+                d->ref.ref();
 
+        }
     }
-
     return *this;
 }
 

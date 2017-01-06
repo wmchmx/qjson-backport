@@ -143,14 +143,15 @@ QJsonDocument::QJsonDocument(const QJsonDocument &other)
  */
 QJsonDocument &QJsonDocument::operator =(const QJsonDocument &other)
 {
-    if (d != other.d) {
-        if (d && !d->ref.deref())
-            delete d;
-        d = other.d;
-        if (d)
-            d->ref.ref();
+    if(this != &other){
+        if (d != other.d) {
+            if (d && !d->ref.deref())
+                delete d;
+            d = other.d;
+            if (d)
+                d->ref.ref();
+        }
     }
-
     return *this;
 }
 
