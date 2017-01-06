@@ -606,21 +606,23 @@ void QJsonValue::detach()
 
 QJsonValueRef &QJsonValueRef::operator =(const QJsonValue &val)
 {
-    if (is_object)
-        o->setValueAt(index, val);
-    else
-        a->replace(index, val);
-
+    if(this != &val) {
+        if (is_object)
+            o->setValueAt(index, val);
+        else
+            a->replace(index, val);
+    }
     return *this;
 }
 
 QJsonValueRef &QJsonValueRef::operator =(const QJsonValueRef &ref)
 {
-    if (is_object)
-        o->setValueAt(index, ref);
-    else
-        a->replace(index, ref);
-
+    if(this != &ref) {
+        if (is_object)
+            o->setValueAt(index, ref);
+        else
+            a->replace(index, ref);
+    }
     return *this;
 }
 
